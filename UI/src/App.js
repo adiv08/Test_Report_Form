@@ -14,8 +14,8 @@ function App() {
     <div className="App">
       <Router>
         <Switch>
-          <Route path="/" component={Home} />
-          <Route path="/mobile-test" component={MobileTest}/>
+          <Route path="/" exact component={Home} />
+          <Route path="/mobile-test" exact component={MobileTest}/>
         </Switch>
       </Router>
     </div>
