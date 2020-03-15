@@ -3,6 +3,7 @@ import os
 import shutil
 import pythoncom
 import win32com.client
+import uuid
 
 
 wdFormatPDF = 17
@@ -63,7 +64,7 @@ def pdf_to_image_pdf(out_file, img_pdf_path):
 
 def create_pdf(form_data):
     src = "D:/tryandtest"
-    dst = "D:/temp/guid1"
+    dst = "D:/temp/" + str(uuid.uuid4())
     copytree(src, dst)
     path = dst + '/word'
     for filename in os.listdir(path):
