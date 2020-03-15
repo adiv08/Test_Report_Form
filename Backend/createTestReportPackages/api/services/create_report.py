@@ -1,4 +1,6 @@
+import ast
 import threading
+import json
 from time import time
 from flask_restplus import fields
 from createTestReportPackages.api import api_response
@@ -24,9 +26,13 @@ def func(request_json):
     form_data = request_json['form_data']
     try:
         tagging_logger.info(f"API START : UPLOAD IMAGE :: TEMPLATE_ID - ")
-        ocr_thread = threading.Thread(target=create_docx_from_data.create_pdf,
-                                      args=(form_data))
-        ocr_thread.start()
+        # form_data = type(ast.literal_eval(form_data))
+        form_data = json.loads(form_data.replace("'",'"'))
+        create_docx_from_data.create_pdf(form_data)
+
+        # ocr_thread = threading.Thread(target=create_docx_from_data.create_pdf,
+        #                               args=(form_data))
+        # ocr_thread.start()
         response = api_response.text_response("Successfully uploaded image", api_response.HTTP_SUCCESS_STATUS_CODE)
         end_time = time()
         tagging_logger.info(
