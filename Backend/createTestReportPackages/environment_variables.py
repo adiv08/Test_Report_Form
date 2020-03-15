@@ -7,15 +7,7 @@ def load_environment_variables(config):
     :param config: dictionary of existing configuration
     :return config: dictionary with environment variables
     """
-    environment_list = ['OCR_SERVICE_NAME',
-                        "SAVE_EXTRACTED_DATA",
-                        "DB_HOST",
-                        "DB_USERNAME",
-                        "DB_PASSWORD",
-                        "DATABASE",
-                        "DB_PORT",
-                        "LOG_LEVEL"
-                        ]
+    environment_list = ["LOG_LEVEL"]
     missing_list = []
     for environment in environment_list:
         value = os.environ.get(environment)
