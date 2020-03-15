@@ -5,8 +5,6 @@ import traceback
 from createTestReportPackages.environment_variables import load_environment_variables
 
 CONFIG = None
-DATABASE_OBJ = None
-TEMPLATES_DATA = None
 
 
 def start_api(args):
@@ -33,12 +31,6 @@ def start_api(args):
         CONFIG = load_environment_variables(CONFIG)
         from createTestReportPackages.utils import platform_logging
         platform_logging.set_log_config(CONFIG)
-        from createTestReportPackages.database import mysql_database
-        DATABASE_OBJ = mysql_database.MysqlDatabase()
-        from createTestReportPackages.database.operations import get_templates_df
-        TEMPLATES_DATA = get_templates_df.TemplatesDataFrame()
-        from createTestReportPackages.pipelines.refresh_template import refresh_by_interval
-        refresh_by_interval()
         from createTestReportPackages import server
         server.start_hosting(host=host, port=port, prod=prod,
                              number_of_workers=workers, threads=threads)

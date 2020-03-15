@@ -1,7 +1,6 @@
 from createTestReportPackages.api import api_response
-from createTestReportPackages.parser import DATABASE_OBJ
 
-URL = '/ifill/health'
+URL = '/test-report-generator/health'
 
 
 def func():
@@ -11,7 +10,6 @@ def func():
     :return:
     """
     try:
-        _ = DATABASE_OBJ.get_connection()
         database_health = "OK"
     except Exception as e:
         database_health = "Critical"
