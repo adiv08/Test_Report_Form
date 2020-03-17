@@ -1,9 +1,10 @@
 from flask import Flask, Blueprint
 from flask_restplus import Resource, Api
-
+from flask_cors import CORS
 from createTestReportPackages.api.api_response import HTTP_SUCCESS_STATUS_CODE, HTTP_FAILURE_STATUS_CODE
 from createTestReportPackages.api.services import health_check, create_report
 app = Flask(__name__)
+CORS(app)
 blueprint = Blueprint('Test Report Generator API', __name__)
 api = Api(blueprint,
           title='Test Report Generator API',
