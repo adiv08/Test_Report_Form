@@ -6,7 +6,6 @@ import win32com.client
 import uuid
 from createTestReportPackages.parser import CONFIG
 
-
 wdFormatPDF = 17
 
 dict = {
@@ -46,8 +45,8 @@ def replace_placeholders(xml_file_path, form_data):
 
 
 def zip_and_convert_to_docx(dst):
-    shutil.make_archive(dst + "/test_report", 'zip', dst)
-    os.rename(dst + '/test_report.zip', dst + '/test_report.docx')
+    shutil.make_archive(dst.replace("copy", "pdf") + "/test_report", 'zip', dst)
+    os.rename(dst.replace("copy", "pdf") + '/test_report.zip', dst.replace("copy", "pdf") + '/test_report.docx')
 
 
 def doc_to_pdf(in_file, out_file):
@@ -65,7 +64,8 @@ def pdf_to_image_pdf(out_file, img_pdf_path):
 
 def create_pdf(form_data):
     src = CONFIG["unZippedDocxPath"]
-    dst = CONFIG["tempFolder"] + str(uuid.uuid4())
+    dst = CONFIG["tempFolder"] + str(uuid.uuid4()) + "/copy"
+    print(dst)
     copytree(src, dst)
     path = dst + '/word'
     for filename in os.listdir(path):
@@ -73,8 +73,8 @@ def create_pdf(form_data):
         fullname = os.path.join(path, filename)
         replace_placeholders(fullname, form_data)
     zip_and_convert_to_docx(dst)
-    in_file = dst + '/test_report.docx'
-    out_file = dst + '/test_report.pdf'
-    img_pdf_path = dst + '/test_report_img.pdf'
+    in_file = dst.replace("copy", "pdf") + '/test_report.docx'
+    out_file = dst.replace("copy", "pdf") + '/test_report.pdf'
+    img_pdf_path = dst.replace("copy", "pdf") + '/test_report_img.pdf'
     doc_to_pdf(in_file, out_file)
     pdf_to_image_pdf(out_file, img_pdf_path)
