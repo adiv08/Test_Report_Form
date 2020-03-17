@@ -1,5 +1,6 @@
 import React from "react"
 import { Button } from 'react-bootstrap';
+import axios from 'axios';
 
 
 class MobileTest extends React.Component {
@@ -10,8 +11,8 @@ class MobileTest extends React.Component {
     data["#@MANUFACTURER@#"] = document.getElementById("Manufacturer").value
     data["#@MobilePhone@#"] = document.getElementById("TEST ITEM").value
     data["#@IDENTIFICATION@#"] = document.getElementById("IDENTIFICATION").value
-    data["#@SERIALNUMBER@#"] = document.getElementById("SERIAL NUMBER").value
-    data["#@RECEIPTNUMBER@#"] = document.getElementById("RECEIPT NUMBER").value
+    data["#@SERIALNO@#"] = document.getElementById("SERIAL NUMBER").value
+    data["#@RECIPTN@#"] = document.getElementById("RECEIPT NUMBER").value
     data["#@TestingEngineer@#"] = document.getElementById("Testing Engineer").value
     data["#@HeadofDepartment@#"] = document.getElementById("hod").value
     data["#@BusinessDevelopmentHead@#"] = document.getElementById("Business Development Head").value
@@ -49,8 +50,13 @@ class MobileTest extends React.Component {
     data["#@ISSUEDATE@#"] = document.getElementById("Issue Date").value
     data["#@ISSUEDATE@#"] = document.getElementById("Issue Date").value
     data["#@ISSUEDATE@#"] = document.getElementById("Issue Date").value
-
-    console.log(data)
+axios({
+      method: 'post',
+      url: 'http://localhost:5000/test-report-generator/create-report',
+      data:{form_data:JSON.stringify(data)} 
+    }).then(response=>{
+      console.log(response)
+    });    console.log(data)
   }
   render() {
     return (
