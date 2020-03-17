@@ -1,6 +1,7 @@
 import React from "react"
 import { Button, Dropdown } from 'react-bootstrap';
-
+import { Link
+} from "react-router-dom";
 class Home extends React.Component {
     loadTestingForm() {
 
@@ -22,7 +23,7 @@ class Home extends React.Component {
                         <Dropdown.Item >Something else</Dropdown.Item>
                     </Dropdown.Menu>
                 </Dropdown>
-                <Button onClick={this.loadTestingForm}>Next</Button>
+                <Link className="btn btn-primary" onClick={this.loadTestingForm} to="/mobile-test">Next</Link>
             </form>
         );
     }
