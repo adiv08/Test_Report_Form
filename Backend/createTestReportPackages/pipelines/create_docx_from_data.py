@@ -64,7 +64,7 @@ def pdf_to_image_pdf(out_file, img_pdf_path):
 
 
 def create_pdf(form_data):
-    src = "D:/tryandtest"
+    src = CONFIG["unZippedDocxPath"]
     dst = CONFIG["tempFolder"] + str(uuid.uuid4())
     copytree(src, dst)
     path = dst + '/word'
