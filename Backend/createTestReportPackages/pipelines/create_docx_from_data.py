@@ -4,6 +4,7 @@ import shutil
 import pythoncom
 import win32com.client
 import uuid
+from createTestReportPackages.parser import CONFIG
 
 
 wdFormatPDF = 17
@@ -64,7 +65,7 @@ def pdf_to_image_pdf(out_file, img_pdf_path):
 
 def create_pdf(form_data):
     src = "D:/tryandtest"
-    dst = "D:/temp/" + str(uuid.uuid4())
+    dst = CONFIG["tempFolder"] + str(uuid.uuid4())
     copytree(src, dst)
     path = dst + '/word'
     for filename in os.listdir(path):

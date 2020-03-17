@@ -1,4 +1,5 @@
 {
+  "tempFolder": "D:/temp/",
 "deviceCount": {"GPU": 1, "CPU": 2},
 "features": ["REGEX_AMOUNT", "Is_CurrencySymbol", "REGEX_DATE", "Start_Date_l1", "Start_Date_l2", "End_Date_l1",
               "End_Date_l2", "DOB_l1", "DOB_l2", "P_TOTAL_l1", "P_TOTAL_l2","IS_START_DATE","IS_END_DATE"],
