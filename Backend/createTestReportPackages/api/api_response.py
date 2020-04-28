@@ -30,6 +30,20 @@ def zip_response(zip_file, status_code):
     return response
 
 
+def pdf_response(pdf_file, status_code):
+    """
+    Create image response for api
+
+    :param base64_image: base64 string of image
+    :param status_code: status code for http response
+    :return: image response
+    """
+    encoded = "data:application/pdf;base64," + pdf_file
+    response = make_response(encoded, status_code)
+    response.headers['Content-Type'] = 'application/pdf'
+    return response
+
+
 def image_response(base64_image, status_code):
     """
     Create image response for api
@@ -38,7 +52,7 @@ def image_response(base64_image, status_code):
     :param status_code: status code for http response
     :return: image response
     """
-    encoded = "data:image/jpeg;base64,"+base64_image
+    encoded = "data:image/jpeg;base64," + base64_image
     response = make_response(encoded, status_code)
     response.headers['Content-Type'] = 'application/octet-stream'
     return response

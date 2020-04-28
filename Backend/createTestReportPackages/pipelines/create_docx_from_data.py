@@ -5,22 +5,9 @@ import pythoncom
 import win32com.client
 import uuid
 from createTestReportPackages.parser import CONFIG
+from PIL import Image
 
 wdFormatPDF = 17
-
-dict = {
-    "#@TESTREPORTNO@#": "123456",
-    "#@ISSUEDATE@#": "10-11-2019",
-    "#@URI@#": "765678",
-    "#@MANUFACTURER@#": "NOKIA",
-    "#@IDENTIFICATION@#": "ABCDEFGH",
-    "#@SERIALNO@#": "987654",
-    "#@RECIPTNO@#": "8793247",
-    "#@DATEOFRECIPT@#": "1-2-2020",
-    "#@TESTENGINEERDATED@#": "2-2-2020",
-    "#@HODDATED@#": "2-2-2020",
-    "#@BDHDATED@#": "2-2-2020",
-}
 
 
 def copytree(src, dst, symlinks=False, ignore=None):
@@ -44,9 +31,10 @@ def replace_placeholders(xml_file_path, form_data):
     f.close()
 
 
-def zip_and_convert_to_docx(dst):
-    shutil.make_archive(dst.replace("copy", "pdf") + "/test_report", 'zip', dst)
-    os.rename(dst.replace("copy", "pdf") + '/test_report.zip', dst.replace("copy", "pdf") + '/test_report.docx')
+def zip_and_convert_to_docx(copy_template_path, save_document_path):
+    shutil.make_archive(os.path.join(save_document_path, CONFIG["saveDocumentName"]), 'zip', copy_template_path)
+    os.rename(os.path.join(save_document_path, CONFIG["saveDocumentName"] + '.zip'),
+              os.path.join(save_document_path, CONFIG["saveDocumentName"] + '.docx'))
 
 
 def doc_to_pdf(in_file, out_file):
@@ -58,23 +46,27 @@ def doc_to_pdf(in_file, out_file):
 
 
 def pdf_to_image_pdf(out_file, img_pdf_path):
-    pages = convert_from_path(out_file)
+    pages = convert_from_path(out_file, 200)
     pages[0].save(img_pdf_path, save_all=True, append_images=pages[1:])
 
 
 def create_pdf(form_data):
-    src = CONFIG["unZippedDocxPath"]
-    dst = CONFIG["tempFolder"] + str(uuid.uuid4()) + "/copy"
-    print(dst)
-    copytree(src, dst)
-    path = dst + '/word'
-    for filename in os.listdir(path):
+    template_path = CONFIG["unZippedDocxPath"]
+    current_process_temp_path = CONFIG["tempFolder"] + str(uuid.uuid4())
+    copy_template_path = current_process_temp_path + CONFIG["copyFolderName"]
+    copytree(template_path, copy_template_path)
+    word_folder_path_for_template = copy_template_path + '/word'
+    for filename in os.listdir(word_folder_path_for_template):
         if not filename.endswith('.xml'): continue
-        fullname = os.path.join(path, filename)
+        fullname = os.path.join(word_folder_path_for_template, filename)
         replace_placeholders(fullname, form_data)
-    zip_and_convert_to_docx(dst)
-    in_file = dst.replace("copy", "pdf") + '/test_report.docx'
-    out_file = dst.replace("copy", "pdf") + '/test_report.pdf'
-    img_pdf_path = dst.replace("copy", "pdf") + '/test_report_img.pdf'
+    img = Image.open(r"C:\Users\aditya.verma\Desktop\New folder (3)\word\media\image15.png")
+    media_folder_path_for_template = word_folder_path_for_template + "/media"
+    im1 = img.save(media_folder_path_for_template + "//image1.png")
+    save_document_path = os.path.join(current_process_temp_path, 'document')
+    zip_and_convert_to_docx(copy_template_path, save_document_path)
+    in_file = os.path.join(save_document_path, CONFIG["saveDocumentName"]) + '.docx'
+    out_file = os.path.join(save_document_path, CONFIG["saveDocumentName"]) + '.pdf'
+    img_pdf_path = os.path.join(save_document_path, CONFIG["saveDocumentName"]) + '_img.pdf'
     doc_to_pdf(in_file, out_file)
     pdf_to_image_pdf(out_file, img_pdf_path)

@@ -1,7 +1,8 @@
 import argparse
 import json
 import traceback
-
+import pandas as pd
+import os
 from createTestReportPackages.environment_variables import load_environment_variables
 
 CONFIG = None
@@ -26,7 +27,7 @@ def start_api(args):
         print('Port : ', port)
         print('Config file path: ', config_file_path)
         json_file = open(config_file_path, 'r')
-        global CONFIG, DATABASE_OBJ, TEMPLATES_DATA
+        global CONFIG
         CONFIG = json.load(json_file)
         CONFIG = load_environment_variables(CONFIG)
         from createTestReportPackages.utils import platform_logging
