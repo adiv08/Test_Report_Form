@@ -11,10 +11,14 @@ from PIL import Image
 import pickle
 import fitz
 from shutil import copyfile
+
+from createTestReportPackages.model.MailService import MailService
 from createTestReportPackages.parser import CONFIG
 import datetime
 import json
 from createTestReportPackages.model import ReportsData
+from createTestReportPackages.utils.helper_utilities import write_report_in_dir
+
 
 wdFormatPDF = 17
 
@@ -217,15 +221,17 @@ def get_stamp(stamp_name):
             return pickle.load(handle)
 
 
-
-
 def func(request_json):
     test_engineer_dict = {
         "Zahid Raza": "kaushalsign.pickle",
         "Ankit Kumar": "kaushalsign.pickle",
         "Kaushal": "kaushalsign.pickle",
         "Mohit": "kaushalsign.pickle",
-        "Jatin Dalal": "kaushalsign.pickle"
+        "Jatin Dalal": "kaushalsign.pickle",
+        "Avishek Kumar": "kaushalsign.pickle",
+        "Parth": "kaushalsign.pickle",
+        "Tushant": "kaushalsign.pickle",
+        "Isha Sachdev": "kaushalsign.pickle"
     }
     test_engineer_name = request_json.form["test_engineer_name"]
     report_file_name = request_json.form["report_file_name"]
@@ -243,12 +249,17 @@ def func(request_json):
                      "TestEngineerName": test_engineer_name,
                      "ApprovedSatatus1": "unapproved", "ApprovedSatatus2": "unapproved",
                      "ApprovedSatatus3": "unapproved",
-                     "ReportApprovedSatatus": "unapproved"}
+                     "ReportApprovedSatatus": "unapproved",
+                     "RejectReportMessage": ""}
     report_data = ReportsData.ReportsData()
     pd.to_pickle(report_data.REPORT_FILE_DATA_FRAME.append(status_repost, ignore_index=True), "reportFileDataframe.pkl")
     status_repost = json.dumps(status_repost)
-    status_repost_file_name = os.path.join(CONFIG["tempFolder"], document_name, CONFIG["status_file_name"])
-    f = open(status_repost_file_name, "w")
-    f.write(status_repost)
-    f.close()
+    write_report_in_dir(document_name, status_repost)
     pdf_to_image_pdf(out_file, img_pdf_path, test_engineer_name, test_engineer_dict)
+    mail_data = {
+        "to": "adityaverma821998@gmail.com,aditi_software@ymail.com",
+        "Subject": f"New Report Uploaded {document_name}",
+        "body": f"Hi <br/> <b> {test_engineer_name} </b> has uploaded new test report named <b> {document_name} </b> please view it and take necessary action. <br/> Click here to view the report {CONFIG['AppURL']}",
+    }
+    mailService = MailService()
+    mailService.send_mail(mail_data)

@@ -1,12 +1,12 @@
 import argparse
 import json
+import smtplib
 import traceback
 import pandas as pd
 import os
 from createTestReportPackages.environment_variables import load_environment_variables
 
 CONFIG = None
-
 
 def start_api(args):
     """ This function loads configurations, dependencies and start python server

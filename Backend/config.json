@@ -1,5 +1,9 @@
 {
   "tempFolder": "D:/temp/",
+  "mail_server": "smtp.gmail.com",
+  "from": "adityaverma821998@gmail.com",
+  "password": "9899323908",
+  "AppURL": "http://localhost:3000",
   "status_file_name": "statusFile.json",
   "unZippedDocxPath" : "D:/tryandtest",
   "copyFolderName": "/copy",

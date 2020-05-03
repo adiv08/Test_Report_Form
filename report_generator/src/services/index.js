@@ -41,16 +41,19 @@ const HelperServices = {
                     });
             });
     },
-    downloadFile(FileName) {
+    downloadFile(FileName, ReportType) {
         var data = {};
         data["report_name"] = FileName
+        data["report_type"] = ReportType
         axios.post(process.env.REACT_APP_BACKEND_URL + "/test-report-generator/download_report", data)
             .then((response) => {
-                console.log(response.data)
+
                 const downloadLink = document.createElement("a");
                 downloadLink.href = response.data;
                 downloadLink.download = FileName;
                 downloadLink.click();
+
+
             })
             .catch((e) => {
             });
@@ -68,13 +71,15 @@ const HelperServices = {
                     });
             })
     },
-    updateStatus(reportName, accessCode, authorityName) {
+    updateStatus(reportName, accessCode, authorityName, updateType, rejectMessage) {
         return new Promise(
             function (resolve, reject) {
                 var formData = {};
                 formData["report_name"] = reportName;
                 formData['access_code'] = accessCode;
                 formData['authority_name'] = authorityName;
+                formData['update_type'] = updateType;
+                formData['reject_message'] = rejectMessage;
                 axios.post(process.env.REACT_APP_BACKEND_URL + "/test-report-generator/update-status", formData)
                     .then((response) => {
                         resolve(response.data)

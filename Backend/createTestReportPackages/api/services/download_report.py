@@ -22,14 +22,19 @@ wdFormatPDF = 17
 URL = '/test-report-generator/download_report'
 
 request_fields = {
-    "report_name": fields.String('Name of the report to be downloaded', required=True)
+    "report_name": fields.String('Name of the report to be downloaded', required=True),
+    "report_type": fields.String('Type of report to be downloaded', required=True)
 }
 
 
 def func(request_json):
     report_name = request_json["report_name"]
+    report_type = request_json["report_type"]
     report_name = os.path.splitext(report_name)[0]
-    save_document_path = os.path.join(CONFIG["tempFolder"], str(report_name), str(report_name)+"_img.pdf")
+    if report_type=="FullReport":
+        save_document_path = os.path.join(CONFIG["tempFolder"], str(report_name), str(report_name)+"_img.pdf")
+    else:
+        save_document_path = os.path.join(CONFIG["tempFolder"], str(report_name), str(report_name)+".pdf")
     print(save_document_path)
     file_obj = open(save_document_path, "rb").read()
     b64_pdf = base64.b64encode(file_obj).decode("utf-8")

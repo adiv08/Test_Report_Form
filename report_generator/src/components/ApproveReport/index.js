@@ -82,21 +82,84 @@ export default function ApproveReport() {
     const [rowsPerPage, setRowsPerPage] = React.useState(10);
     const [open, setOpen] = React.useState(false);
     const [rows, setRows] = React.useState([]);
+    const [password, setpassword] = React.useState("");
+    const [approvingAuthority, setApprovingAuthority] = React.useState("");
+    const [selectedReport, setSelectedReport] = React.useState("");
+    const [rejectComment, setrejectComment] = React.useState("");
 
     React.useEffect(() => {
-       HelperServices.getReportFileList()
+        HelperServices.getReportFileList()
             .then((data) => {
                 setRows(data)
             })
         console.log('mount it!');
     }, []);
-
+    const passwordTyped = (event) => {
+        setpassword(event.target.value.toString())
+    }
+    const rejectCommentTyped = (event) => {
+        setrejectComment(event.target.value.toString())
+    }
     const handleClickOpen = () => {
         setOpen(true);
     };
 
     const handleClose = () => {
         setOpen(false);
+    };
+
+    const submitPassword = () => {
+        if (password == "") {
+            alert("Please enter the password")
+        }
+        else {
+            setOpen(false);
+            HelperServices.updateStatus(selectedReport, password, approvingAuthority, "Accept", "")
+                .then((data) => {
+                    if (data == "Status Updated") {
+                        HelperServices.getReportFileList()
+                            .then((data) => {
+                                setRows(data)
+                            })
+                    }
+                    else {
+                        alert("Please enter a correct access code")
+                    }
+                })
+                .catch((e) => {
+
+                })
+        }
+    };
+    const rejectReport = () => {
+        if (password == "") {
+            alert("Please enter the password")
+        }
+        else {
+            if (rejectComment == "") {
+                alert("Please enter a comment to reject this report")
+            }
+            else {
+                setOpen(false);
+                HelperServices.updateStatus(selectedReport, password, approvingAuthority, "Reject", rejectComment)
+                    .then((data) => {
+                        if (data == "Status Updated") {
+                            HelperServices.getReportFileList()
+                                .then((data) => {
+                                    setRows(data)
+                                })
+                        }
+                        else {
+                            alert("Please enter a correct access code")
+                        }
+                    })
+                    .catch((e) => {
+
+                    })
+            }
+        }
+
+
     };
 
     const handleChangePage = (event, newPage) => {
@@ -110,26 +173,27 @@ export default function ApproveReport() {
 
     const downloadReport = (ReportRow) => {
         console.log(ReportRow.ReportName)
-        
-        HelperServices.downloadFile(ReportRow.ReportName)
+        HelperServices.downloadFile(ReportRow.ReportName, "FullReport")
     }
     const TableCellClick = (ReportRow, columnId) => {
         if (columnId == "Download") {
-            downloadReport(ReportRow)
+            if (ReportRow.ReportApprovedSatatus != "Approved") {
+                alert("You can't download a Report till its not approved")
+            }
+            else {
+                downloadReport(ReportRow)
+            }
         }
         else {
-            if (columnId == 'ApprovedSatatus1') {
-               // handleClickOpen()
-               HelperServices.updateStatus(ReportRow.ReportName, "1234", 'ApprovedSatatus1')
+            if (columnId == "ApprovedSatatus1" || columnId == "ApprovedSatatus2" || columnId == "ApprovedSatatus3") {
+                handleClickOpen()
+                setSelectedReport(ReportRow.ReportName)
+                setApprovingAuthority(columnId)
             }
-            else if (columnId == 'ApprovedSatatus2') {
-                //handleClickOpen()
-                HelperServices.updateStatus(ReportRow.ReportName, "3456", 'ApprovedSatatus2')
+            else if (columnId == "ReportName") {
+                HelperServices.downloadFile(ReportRow.ReportName, "HalfReport")
             }
-            else if (columnId == 'ApprovedSatatus3') {
-                //handleClickOpen()
-                HelperServices.updateStatus(ReportRow.ReportName, "7910", 'ApprovedSatatus3')
-            }
+
         }
     }
 
@@ -195,13 +259,32 @@ export default function ApproveReport() {
                         label="Secret Code"
                         type="password"
                         fullWidth
+                        onChange={passwordTyped}
+                    />
+                </DialogContent>
+                <DialogContent>
+                    <DialogContentText>
+                        In case of rejection please enter a comment.
+          </DialogContentText>
+                    <TextField
+                        autoFocus
+                        margin="dense"
+                        id="Remark"
+                        label="Remark"
+                        type="text"
+                        fullWidth
+                        onChange={rejectCommentTyped}
+
                     />
                 </DialogContent>
                 <DialogActions>
                     <Button onClick={handleClose} color="primary">
                         Cancel
           </Button>
-                    <Button onClick={handleClose} color="primary">
+                    <Button onClick={rejectReport} color="primary">
+                        Reject
+          </Button>
+                    <Button onClick={submitPassword} color="primary">
                         Approve
           </Button>
                 </DialogActions>
