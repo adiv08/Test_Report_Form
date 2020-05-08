@@ -38,11 +38,12 @@ class MailService:
 
     def send_mail(self, mail_data):
         try:
-            msg = self.create_message(mail_data)
-            print("trying to send mail ....")
-            text = msg.as_string()
-            self.MAIL_SERVER.sendmail(CONFIG["from"], mail_data["to"].split(","), text)
-            self.MAIL_SERVER.quit()
-            print("mail sent")
+            if bool(CONFIG["sendmail"]):
+                msg = self.create_message(mail_data)
+                print("trying to send mail ....")
+                text = msg.as_string()
+                self.MAIL_SERVER.sendmail(CONFIG["from"], mail_data["to"].split(","), text)
+                self.MAIL_SERVER.quit()
+                print("mail sent")
         except Exception as e:
             print(e)

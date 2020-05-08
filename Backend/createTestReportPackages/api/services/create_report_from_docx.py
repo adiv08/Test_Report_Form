@@ -19,7 +19,6 @@ import json
 from createTestReportPackages.model import ReportsData
 from createTestReportPackages.utils.helper_utilities import write_report_in_dir
 
-
 wdFormatPDF = 17
 
 URL = '/test-report-generator/create-report-from-doc'
@@ -190,13 +189,14 @@ def get_letterhead(stamp_name):
             return pickle.load(handle)
 
 
-def get_stamp(stamp_name):
+def get_stamp(stamp_name, pdfPath=""):
+    print(stamp_name,pdfPath)
     create_stamp = False
     pixmap = {}
     stamp_height = 0
     stamp_widht = 0
     if create_stamp:
-        pages = convert_from_path(r"C:\Users\aditya.verma\Desktop\kaushalsign.pdf", 200)
+        pages = convert_from_path(pdfPath, 200)
         stamp = np.array(pages[0])
         img = cv2.cvtColor(stamp, cv2.COLOR_BGR2GRAY)
         ret, binarized_image = cv2.threshold(img, 0, 255, cv2.THRESH_BINARY + cv2.THRESH_OTSU)
@@ -223,16 +223,26 @@ def get_stamp(stamp_name):
 
 def func(request_json):
     test_engineer_dict = {
-        "Zahid Raza": "kaushalsign.pickle",
-        "Ankit Kumar": "kaushalsign.pickle",
+        "Zahid Raza": "zahid_raza_sign.pickle",
+        "Ankit Kumar": "ankit_kumar_sign.pickle",
         "Kaushal": "kaushalsign.pickle",
-        "Mohit": "kaushalsign.pickle",
-        "Jatin Dalal": "kaushalsign.pickle",
-        "Avishek Kumar": "kaushalsign.pickle",
-        "Parth": "kaushalsign.pickle",
-        "Tushant": "kaushalsign.pickle",
-        "Isha Sachdev": "kaushalsign.pickle"
+        "Mohit": "mohit_sign.pickle",
+        "Jatin Dalal": "jatin_dalal_sign.pickle",
+        "Avishek Kumar": "avishek_kumar_sign.pickle",
+        "Parth": "parth_sign.pickle",
+        "Tushant": "tushnat_sign.pickle",
+        "Isha Sachdev": "isha_sachdev_sign.pickle"
     }
+    # get_stamp(test_engineer_dict["Zahid Raza"], r"C:\Users\aditya.verma\Desktop\ZahidSign.pdf")
+    # get_stamp(test_engineer_dict["Ankit Kumar"], r"C:\Users\aditya.verma\Desktop\ankitSign.pdf")
+    # get_stamp(test_engineer_dict["Mohit"], r"C:\Users\aditya.verma\Desktop\mohitSign.pdf")
+    # get_stamp(test_engineer_dict["Jatin Dalal"], r"C:\Users\aditya.verma\Desktop\jatinSign.pdf")
+    # get_stamp(test_engineer_dict["Avishek Kumar"], r"C:\Users\aditya.verma\Desktop\reportwala\Avisheksign.pdf")
+    # get_stamp(test_engineer_dict["Parth"], r"C:\Users\aditya.verma\Desktop\reportwala\Parthsign.pdf")
+    # # get_stamp(test_engineer_dict["Tushant"], r"C:\Users\aditya.verma\Desktop\kaushalsign.pdf")
+    # get_stamp(test_engineer_dict["Isha Sachdev"], r"C:\Users\aditya.verma\Desktop\reportwala\ishasign.pdf")
+    # get_stamp("stampBDH.pickle", r"C:\Users\aditya.verma\Desktop\reportwala\stamp1.pdf")
+    # print("sign created")
     test_engineer_name = request_json.form["test_engineer_name"]
     report_file_name = request_json.form["report_file_name"]
     word_file = request_json.files["report_docx"]
@@ -257,7 +267,7 @@ def func(request_json):
     write_report_in_dir(document_name, status_repost)
     pdf_to_image_pdf(out_file, img_pdf_path, test_engineer_name, test_engineer_dict)
     mail_data = {
-        "to": "adityaverma821998@gmail.com,aditi_software@ymail.com",
+        "to": CONFIG["MailTo"],
         "Subject": f"New Report Uploaded {document_name}",
         "body": f"Hi <br/> <b> {test_engineer_name} </b> has uploaded new test report named <b> {document_name} </b> please view it and take necessary action. <br/> Click here to view the report {CONFIG['AppURL']}",
     }

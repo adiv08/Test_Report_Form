@@ -1,8 +1,10 @@
 {
   "tempFolder": "D:/temp/",
+  "sendmail": "True",
+  "MailTo": "eelabatharva@gmail.com,electronicslab@atharvalab.com,businessdevelopment@atharvalab.com",
   "mail_server": "smtp.gmail.com",
-  "from": "adityaverma821998@gmail.com",
-  "password": "9899323908",
+  "from": "atharva.reportgenerator@gmail.com",
+  "password": "Admin@123",
   "AppURL": "http://localhost:3000",
   "status_file_name": "statusFile.json",
   "unZippedDocxPath" : "D:/tryandtest",

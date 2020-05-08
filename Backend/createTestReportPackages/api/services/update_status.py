@@ -58,7 +58,7 @@ def func(request_json):
                         report_data.REPORT_FILE_DATA_FRAME.ReportName == report_name, "ReportApprovedSatatus"] = "Approved"
                     ready_to_download = "And the report is ready to download"
                 mail_data = {
-                    "to": "adityaverma821998@gmail.com,aditi_software@ymail.com",
+                    "to": CONFIG["MailTo"],
                     "Subject": f"Report accepted by {authority[authority_name]}",
                     "body": f"Hi <br> <b> {authority[authority_name]} </b> has approved the report <b> {report_name} </b> " + ready_to_download,
                 }
@@ -70,7 +70,7 @@ def func(request_json):
                 report_data.REPORT_FILE_DATA_FRAME.loc[
                     report_data.REPORT_FILE_DATA_FRAME.ReportName == report_name, "RejectReportMessage"] = reject_message
                 mail_data = {
-                    "to": "adityaverma821998@gmail.com,aditi_software@ymail.com",
+                    "to": CONFIG["MailTo"],
                     "Subject": f"Report Rejected by {authority[authority_name]}",
                     "body": f"Hi <br> <b> {authority[authority_name]} </b> has Rejected the report <b> {report_name} </b> <br/> the reason for rejection is {reject_message} ",
                 }
