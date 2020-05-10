@@ -147,7 +147,16 @@ def get_all_pixmap(out_file):
             dy = int((text_instances[0][1] * scaley) - (3 * stamp_height) / 4)
         else:
             text1 = page.getText(output='dict')
-            lastRowHeight = text1['blocks'][-1]['bbox'][3]
+            maxY = 0
+            for box in text1['blocks']:
+                boxY = box['bbox'][3]
+                if maxY < boxY:
+                    try:
+                        if not box['lines'][0]['spans'][0]['text'].startswith("TRF No. "):
+                            maxY = boxY
+                    except Exception as e:
+                        maxY = boxY
+            lastRowHeight = maxY
             dx = X - int(1.2 * stamp_widht)
             new_y = int((lastRowHeight * scaley))
             if new_y >= 2339 - stamp_height:
@@ -190,7 +199,7 @@ def get_letterhead(stamp_name):
 
 
 def get_stamp(stamp_name, pdfPath=""):
-    print(stamp_name,pdfPath)
+    print(stamp_name, pdfPath)
     create_stamp = False
     pixmap = {}
     stamp_height = 0
