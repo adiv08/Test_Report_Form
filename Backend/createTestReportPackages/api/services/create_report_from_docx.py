@@ -152,7 +152,7 @@ def get_all_pixmap(out_file):
                 boxY = box['bbox'][3]
                 if maxY < boxY:
                     try:
-                        if not box['lines'][0]['spans'][0]['text'].startswith("TRF No. "):
+                        if not box['lines'][0]['spans'][0]['text'].startswith("TRF No."):
                             maxY = boxY
                     except Exception as e:
                         maxY = boxY
@@ -234,7 +234,7 @@ def func(request_json):
     test_engineer_dict = {
         "Zahid Raza": "zahid_raza_sign.pickle",
         "Ankit Kumar": "ankit_kumar_sign.pickle",
-        "Kaushal": "kaushalsign.pickle",
+        "Kaushal Kumar": "kaushalsign.pickle",
         "Mohit": "mohit_sign.pickle",
         "Jatin Dalal": "jatin_dalal_sign.pickle",
         "Avishek Kumar": "avishek_kumar_sign.pickle",

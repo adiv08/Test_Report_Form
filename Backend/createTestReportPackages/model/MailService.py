@@ -38,7 +38,7 @@ class MailService:
 
     def send_mail(self, mail_data):
         try:
-            if bool(CONFIG["sendmail"]):
+            if False:
                 msg = self.create_message(mail_data)
                 print("trying to send mail ....")
                 text = msg.as_string()
