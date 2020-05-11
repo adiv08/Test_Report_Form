@@ -42,9 +42,9 @@ def pdf_to_image_pdf(out_file, img_pdf_path, test_engineer_name, test_engineer_d
     pages = convert_from_path(out_file, 200)
     X = pages[0].size[0]
     Y = pages[0].size[1]
-    new_pixmap_list = get_all_pixmap(out_file,X,Y)
-    BDH_atamp_pixmap = get_pix_map_for_BDH(out_file,X,Y)
-    test_engineer_sign = get_pix_map_for_test_engineer(out_file, test_engineer_name, test_engineer_dict,X,Y)
+    new_pixmap_list = get_all_pixmap(out_file, X, Y)
+    BDH_atamp_pixmap = get_pix_map_for_BDH(out_file, X, Y)
+    test_engineer_sign = get_pix_map_for_test_engineer(out_file, test_engineer_name, test_engineer_dict, X, Y)
     letterhead = get_letterhead("letterhead.pickle")
     newPage = []
     for i, page in enumerate(pages):
@@ -68,7 +68,7 @@ def pdf_to_image_pdf(out_file, img_pdf_path, test_engineer_name, test_engineer_d
     newPage[0].save(img_pdf_path, save_all=True, append_images=newPage[1:])
 
 
-def get_pix_map_for_test_engineer(out_file, name, test_engineer_dict,X,Y):
+def get_pix_map_for_test_engineer(out_file, name, test_engineer_dict, X, Y):
     stamp = get_stamp(test_engineer_dict[name])
     pixmap = stamp["pixmap"]
     stamp_height = stamp["height"]
@@ -94,7 +94,7 @@ def get_pix_map_for_test_engineer(out_file, name, test_engineer_dict,X,Y):
     return new_pixmap_list
 
 
-def get_pix_map_for_BDH(out_file,X,Y):
+def get_pix_map_for_BDH(out_file, X, Y):
     stamp = get_stamp("stampBDH.pickle")
     pixmap = stamp["pixmap"]
     stamp_height = stamp["height"]
@@ -120,7 +120,7 @@ def get_pix_map_for_BDH(out_file,X,Y):
     return new_pixmap_list
 
 
-def get_all_pixmap(out_file, X,Y):
+def get_all_pixmap(out_file, X, Y):
     stamp = get_stamp("stampHOD.pickle")
     pixmap = stamp["pixmap"]
     stamp_height = stamp["height"]
@@ -132,11 +132,9 @@ def get_all_pixmap(out_file, X,Y):
     print(scalex, scaley)
     new_pixmap_list = []
     for page in doc:
-        text = "Ajay Kumar Yadav"
-        text_instances1 = page.searchFor(text)
-        text = "Approving Authority"
-        text_instances2 = page.searchFor(text)
-        text_instances = text_instances1 + text_instances2
+        text_instances = []
+        for text in ["Ajay Kumar Yadav", "Approving Authority"]:
+            text_instances += page.searchFor(text)
         new_pix_map = {}
         if (text_instances):
             dx = int(text_instances[0][0] * scalex)
@@ -153,7 +151,7 @@ def get_all_pixmap(out_file, X,Y):
                     except Exception as e:
                         maxY = boxY
             lastRowHeight = maxY
-            dx = X - int(1.5 * stamp_widht)
+            dx = X - int(1.2 * stamp_widht)
             new_y = int((lastRowHeight * scaley))
             if new_y >= Y - stamp_height:
                 dy = Y - int(1.2 * stamp_height)
