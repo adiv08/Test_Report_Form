@@ -39,11 +39,13 @@ def doc_to_pdf(in_file, out_file):
 
 
 def pdf_to_image_pdf(out_file, img_pdf_path, test_engineer_name, test_engineer_dict):
-    new_pixmap_list = get_all_pixmap(out_file)
-    BDH_atamp_pixmap = get_pix_map_for_BDH(out_file)
-    test_engineer_sign = get_pix_map_for_test_engineer(out_file, test_engineer_name, test_engineer_dict)
-    letterhead = get_letterhead("letterhead.pickle")
     pages = convert_from_path(out_file, 200)
+    X = pages[0].size[0]
+    Y = pages[0].size[1]
+    new_pixmap_list = get_all_pixmap(out_file,X,Y)
+    BDH_atamp_pixmap = get_pix_map_for_BDH(out_file,X,Y)
+    test_engineer_sign = get_pix_map_for_test_engineer(out_file, test_engineer_name, test_engineer_dict,X,Y)
+    letterhead = get_letterhead("letterhead.pickle")
     newPage = []
     for i, page in enumerate(pages):
         open_cv_image = np.array(page)
@@ -66,15 +68,13 @@ def pdf_to_image_pdf(out_file, img_pdf_path, test_engineer_name, test_engineer_d
     newPage[0].save(img_pdf_path, save_all=True, append_images=newPage[1:])
 
 
-def get_pix_map_for_test_engineer(out_file, name, test_engineer_dict):
+def get_pix_map_for_test_engineer(out_file, name, test_engineer_dict,X,Y):
     stamp = get_stamp(test_engineer_dict[name])
     pixmap = stamp["pixmap"]
     stamp_height = stamp["height"]
     stamp_widht = stamp["width"]
     doc = fitz.open(out_file)
     page = doc[0]
-    Y = 2339
-    X = 1654
     scalex = X / page.MediaBox[2]
     scaley = Y / page.MediaBox[3]
     print(scalex, scaley)
@@ -94,15 +94,13 @@ def get_pix_map_for_test_engineer(out_file, name, test_engineer_dict):
     return new_pixmap_list
 
 
-def get_pix_map_for_BDH(out_file):
+def get_pix_map_for_BDH(out_file,X,Y):
     stamp = get_stamp("stampBDH.pickle")
     pixmap = stamp["pixmap"]
     stamp_height = stamp["height"]
     stamp_widht = stamp["width"]
     doc = fitz.open(out_file)
     page = doc[0]
-    Y = 2339
-    X = 1654
     scalex = X / page.MediaBox[2]
     scaley = Y / page.MediaBox[3]
     print(scalex, scaley)
@@ -122,15 +120,13 @@ def get_pix_map_for_BDH(out_file):
     return new_pixmap_list
 
 
-def get_all_pixmap(out_file):
+def get_all_pixmap(out_file, X,Y):
     stamp = get_stamp("stampHOD.pickle")
     pixmap = stamp["pixmap"]
     stamp_height = stamp["height"]
     stamp_widht = stamp["width"]
     doc = fitz.open(out_file)
     page = doc[0]
-    Y = 2339
-    X = 1654
     scalex = X / page.MediaBox[2]
     scaley = Y / page.MediaBox[3]
     print(scalex, scaley)
@@ -157,9 +153,9 @@ def get_all_pixmap(out_file):
                     except Exception as e:
                         maxY = boxY
             lastRowHeight = maxY
-            dx = X - int(1.2 * stamp_widht)
+            dx = X - int(1.5 * stamp_widht)
             new_y = int((lastRowHeight * scaley))
-            if new_y >= 2339 - stamp_height:
+            if new_y >= Y - stamp_height:
                 dy = Y - int(1.2 * stamp_height)
             else:
                 dy = new_y
