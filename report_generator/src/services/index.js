@@ -1,4 +1,5 @@
 import axios from 'axios';
+const REACT_APP_BACKEND_URL = "http://localhost:5000"
 const HelperServices = {
     //   getJWTToken(username, password) {
     //     return new Promise(
@@ -28,7 +29,7 @@ const HelperServices = {
                 formData.append('test_engineer_name', testEngineerName);
                 formData.append('report_docx', docxFile);
                 formData.append('report_file_name', reportFileName);
-                axios.post(process.env.REACT_APP_BACKEND_URL + "/test-report-generator/create-report-from-doc", formData)
+                axios.post(REACT_APP_BACKEND_URL + "/test-report-generator/create-report-from-doc", formData)
                     .then((response) => {
                         resolve(response.status)
                     })
@@ -45,7 +46,7 @@ const HelperServices = {
         var data = {};
         data["report_name"] = FileName
         data["report_type"] = ReportType
-        axios.post(process.env.REACT_APP_BACKEND_URL + "/test-report-generator/download_report", data)
+        axios.post(REACT_APP_BACKEND_URL + "/test-report-generator/download_report", data)
             .then((response) => {
 
                 const downloadLink = document.createElement("a");
@@ -62,7 +63,7 @@ const HelperServices = {
     getReportFileList() {
         return new Promise(
             function (resolve, reject) {
-                axios.get(process.env.REACT_APP_BACKEND_URL + "/test-report-generator/get-report-list")
+                axios.get(REACT_APP_BACKEND_URL + "/test-report-generator/get-report-list")
                     .then((response) => {
                         resolve(response.data)
                     })
@@ -80,7 +81,7 @@ const HelperServices = {
                 formData['authority_name'] = authorityName;
                 formData['update_type'] = updateType;
                 formData['reject_message'] = rejectMessage;
-                axios.post(process.env.REACT_APP_BACKEND_URL + "/test-report-generator/update-status", formData)
+                axios.post(REACT_APP_BACKEND_URL + "/test-report-generator/update-status", formData)
                     .then((response) => {
                         resolve(response.data)
                     })
