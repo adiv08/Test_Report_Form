@@ -64,7 +64,13 @@ def pdf_to_image_pdf(out_file, img_pdf_path, test_engineer_name, test_engineer_d
                 open_cv_image[pixel[0], pixel[1]] = pixmap[pixel]
             except Exception as e:
                 continue
-        newPage.append(Image.fromarray(open_cv_image))
+        scale_percent = 60  # percent of original size
+        width = int(open_cv_image.shape[1] * scale_percent / 100)
+        height = int(open_cv_image.shape[0] * scale_percent / 100)
+        dim = (width, height)
+        # resize image
+        resized = cv2.resize(open_cv_image, dim, interpolation=cv2.INTER_AREA)
+        newPage.append(Image.fromarray(resized))
     newPage[0].save(img_pdf_path, save_all=True, append_images=newPage[1:])
 
 
